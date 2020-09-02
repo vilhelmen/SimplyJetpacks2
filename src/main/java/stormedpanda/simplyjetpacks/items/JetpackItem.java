@@ -144,7 +144,6 @@ public class JetpackItem extends ArmorItem implements IHUDInfoProvider, IEnergyC
         }
         int stored = Math.min(container.getTag().getInt(TAG_ENERGY), getMaxEnergyStored(container));
         int energyExtracted = Math.min(stored, Math.min(this.maxExtract, maxExtract));
-
         if (!simulate) {
             stored -= energyExtracted;
             container.getTag().putInt(TAG_ENERGY, stored);

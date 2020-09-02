@@ -1,12 +1,13 @@
 modLoader="javafml"
-loaderVersion="[32,)"
+loaderVersion="[33,)"
+license="The MIT License"
 issueTrackerURL="https://github.com/Tomson124/SimplyJetpacks2/issues"
 
 [[mods]]
 modId="simplyjetpacks"
 version="${file.jarVersion}"
 displayName="Simply Jetpacks 2"
-updateJSONURL="https://raw.githubusercontent.com/Tomson124/SimplyJetpacks2/1.16/updates/update.json"
+updateJSONURL="https://raw.githubusercontent.com/Tomson124/SimplyJetpacks2/1.16.2-dev/updates/update.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/simply-jetpacks-2"
 logoFile="assets/simplyjetpacks/logo.png"
 credits="cybercat5555"
@@ -22,13 +23,13 @@ Previous Author: tonius11
 [[dependencies.simplyjetpacks]]
     modId="forge"
     mandatory=true
-    versionRange="[32,)"
+    versionRange="[33,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.simplyjetpacks]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.1]"
+    versionRange="[1.16.2]"
     ordering="NONE"
     side="BOTH"
