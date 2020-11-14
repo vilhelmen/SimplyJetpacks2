@@ -17,7 +17,7 @@ apply plugin: 'idea'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
-version = "${minecraft_version}-${mod_version}" //." + (System.env.BUILD_NUMBER ?: "homebaked")
+version = "${minecraft_version}-${mod_version}-bauble" //." + (System.env.BUILD_NUMBER ?: "homebaked")
 group = 'tonius.simplyjetpacks'
 archivesBaseName = 'SimplyJetpacks2'
 
@@ -59,6 +59,10 @@ repositories {
         name = "Tterrag Maven"
         url = "https://maven.tterrag.com/"
     }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
 }
 
 dependencies {
@@ -91,6 +95,8 @@ dependencies {
     runtime "cofh:ThermalExpansion:${thermalexpansion_version}:universal"
     runtime "cofh:RedstoneArsenal:${redstonearsenal_version}:universal"
     compile "curse.maven:redstone-repository-revolved:2695517"
+    // runtime for optional?
+    compile "baubles:Baubles:1.12:1.5.2"
 }
 
 processResources {

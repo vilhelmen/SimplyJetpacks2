@@ -48,6 +48,8 @@ import tonius.simplyjetpacks.setup.ModEnchantments;
 import tonius.simplyjetpacks.setup.ModItems;
 import tonius.simplyjetpacks.setup.ParticleType;
 import tonius.simplyjetpacks.util.*;
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -58,7 +60,7 @@ import static tonius.simplyjetpacks.handler.LivingTickHandler.floatingTickCount;
 
 @Optional.Interface(iface = "thundr.redstonerepository.api.IArmorEnderium", modid = "redstonerepository")
 @Optional.Interface(iface = "cofh.core.item.IEnchantableItem", modid = "cofhcore")
-public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyContainerItem, IHUDInfoProvider, IArmorEnderium, IEnchantableItem {
+public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyContainerItem, IHUDInfoProvider, IArmorEnderium, IEnchantableItem, IBauble {
 
 	public static final String TAG_ENERGY = "Energy";
 	public static final String TAG_ENGINE = "JetpackEngine";
@@ -582,5 +584,15 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
     @Optional.Method(modid = "cofhcore")
 	public boolean canEnchant(ItemStack stack, Enchantment enchantment){
 		return enchantment == Enchantment.getEnchantmentByLocation("cofhcore:holding");
+	}
+
+	// @Optional.Method(modid = "baubles")
+	// I can *almost* see how to make this optional, but I am too bad at java now
+	// would need an entry in integration.ModType... probably
+	// ...do I just return 5 and skip the custom types????????
+	// Still need inheritance :/
+	@Override
+	public BaubleType getBaubleType(ItemStack itemstack) {
+		return BaubleType.BODY;
 	}
 }
