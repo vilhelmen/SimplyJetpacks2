@@ -132,11 +132,19 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 	}
 
 	@Override
-	public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
+	public void onArmorTick(World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
 		flyUser(player, stack, this, false);
 		if (this.canCharge(stack) && this.isChargerOn(stack)) {
 			chargeInventory(player, stack, this);
 		}
+	}
+
+	@Override
+	public void onWornTick(@Nonnull ItemStack itemstack, @Nonnull EntityLivingBase player) {
+		// EntityLivingBase is probably a superclass of EntityPlayer...
+		// UHHHHH it wants a non-null world... but doens't use it?
+		// well I *could* just remove the nonnull on it
+		this.onArmorTick(null, player, stack)
 	}
 
 	public void toggleState(boolean on, ItemStack stack, String type, String tag, EntityPlayer player, boolean showState) {
@@ -594,5 +602,11 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 	@Override
 	public BaubleType getBaubleType(ItemStack itemstack) {
 		return BaubleType.BODY;
+	}
+
+	// only able to equip non-armored variants
+	@Override
+	public default boolean canEquip(ItemStack itemstack, EntityLivingBase player) {		
+		return !Jetpack.values()[i].getIsArmored();
 	}
 }
