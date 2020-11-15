@@ -144,7 +144,7 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 		// EntityLivingBase is probably a superclass of EntityPlayer...
 		// UHHHHH it wants a non-null world... but doens't use it?
 		// well I *could* just remove the nonnull on it
-		this.onArmorTick(null, player, stack)
+		this.onArmorTick(null, player, stack);
 	}
 
 	public void toggleState(boolean on, ItemStack stack, String type, String tag, EntityPlayer player, boolean showState) {
