@@ -1,5 +1,6 @@
 package tonius.simplyjetpacks.client.handler;
 
+import baubles.api.BaublesApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
@@ -46,6 +47,9 @@ public class ClientTickHandler {
 		if (mc.player == null) return;
 		ParticleType jetpackState = null;
 		ItemStack armor = mc.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+		if (!(armor.getItem() instanceof ItemJetpack)) {
+            armor = BaublesApi.getBaubles(mc.player).getStackInSlot(5);
+        }
 		if (armor.getItem() instanceof ItemJetpack) {
 			int i = MathHelper.clamp(armor.getItemDamage(), 0, numItems - 1);
 			Jetpack jetpack = Jetpack.getTypeFromMeta(i);

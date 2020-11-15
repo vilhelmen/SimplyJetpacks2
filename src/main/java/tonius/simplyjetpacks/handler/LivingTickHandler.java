@@ -1,5 +1,8 @@
 package tonius.simplyjetpacks.handler;
 
+import baubles.api.BaubleType;
+import baubles.api.BaublesApi;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.NetHandlerPlayServer;
@@ -39,7 +42,14 @@ public class LivingTickHandler {
     public void onLivingTick(LivingUpdateEvent event) {
         if (!event.getEntityLiving().world.isRemote) {
             ParticleType jetpackState = null;
+            // RIP baubles being optional, I CANNOT figure out a way to make that work here
             ItemStack armor = event.getEntityLiving().getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+            if (!(armor.getItem() instanceof ItemJetpack) && (event.getEntityLiving() instanceof EntityPlayer)) {
+                // oh NOW it wants to use EntityPlayer
+                // also, idk, it doesn't like me using the enum. the value is 5 and idk how to access it
+                // UHHHH may not be a player. Is this running on.... everything? always?
+                armor = BaublesApi.getBaubles((EntityPlayer)event.getEntityLiving()).getStackInSlot(5);
+            }
             Jetpack jetpack = null;
             if (armor.getItem() instanceof ItemJetpack) {
                 int i = MathHelper.clamp(armor.getItemDamage(), 0, numItems - 1);

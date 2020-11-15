@@ -1,5 +1,6 @@
 package tonius.simplyjetpacks.gui;
 
+import baubles.api.BaublesApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -51,6 +52,10 @@ public class JetpackGuiScreen extends GuiScreen {
 
         ItemStack stack = minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
         Item item = stack.getItem();
+        if (!(item instanceof ItemJetpack)) {
+            stack = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5);
+            item = stack.getItem();
+        }
         if (item instanceof ItemJetpack) {
             ItemJetpack jetpack = (ItemJetpack) item;
             this.addButton(new GuiButtonImage(3, relX + 120, relY + 38, 20, 20, 216, 0, 20, GUI_BASE));
@@ -79,7 +84,12 @@ public class JetpackGuiScreen extends GuiScreen {
         minecraft.getTextureManager().bindTexture(GUI_BASE);
         this.drawTexturedModalRect(relX, relY, 0, 0, WIDTH, HEIGHT);
 
-        drawStringCenter(I18n.format(minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getUnlocalizedName() + ".name"), fontRenderer, relX + 88, relY + 5, 0xFFFFFF, true);
+        Item chest = minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem();
+        if (!(chest instanceof ItemJetpack)) {
+            chest = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5).getItem();
+        }
+
+        drawStringCenter(I18n.format(chest.getUnlocalizedName() + ".name"), fontRenderer, relX + 88, relY + 5, 0xFFFFFF, true);
         GuiInventory.drawEntityOnScreen(relX + 80, relY + 90, 40, (float) (relX + 51) - mousePosX, (float) (relY + 75 - 50) - mousePosY, minecraft.player);
 
         minecraft.getTextureManager().bindTexture(ENERGY_BAR);
@@ -93,6 +103,12 @@ public class JetpackGuiScreen extends GuiScreen {
     private int getEnergyBarAmount() {
         ItemStack stack = minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
         Item item = stack.getItem();
+
+        if (!(item instanceof ItemJetpack)) {
+            stack = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5);
+            item = stack.getItem();
+        }
+
         if (item instanceof ItemJetpack) {
             ItemJetpack jetpack = (ItemJetpack) item;
 /*            if (jetpack.isCreative) {
@@ -118,6 +134,12 @@ public class JetpackGuiScreen extends GuiScreen {
     protected void actionPerformed(@Nonnull GuiButton button) throws IOException {
         ItemStack stack = minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
         Item item = stack.getItem();
+
+        if (!(item instanceof ItemJetpack)) {
+            stack = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5);
+            item = stack.getItem();
+        }
+
         if (item instanceof ItemFluxpack) {
             if (button.id == 1) {
                 NetworkHandler.instance.sendToServer(new MessageKeybind(MessageKeybind.JetpackPacket.ENGINE));

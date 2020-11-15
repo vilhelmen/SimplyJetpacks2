@@ -1,5 +1,6 @@
 package tonius.simplyjetpacks.client.handler;
 
+import baubles.api.BaublesApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -24,6 +25,10 @@ public class HUDTickHandler {
 		if (mc.player != null) {
 			if ((mc.currentScreen == null || mc.currentScreen instanceof JetpackGuiScreen || Config.showHUDWhileChatting && mc.currentScreen instanceof GuiChat) && !mc.gameSettings.hideGUI && !mc.gameSettings.showDebugInfo) {
 				ItemStack chestplate = mc.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+
+				if (!(chestplate.getItem() instanceof IHUDInfoProvider)) {
+					chestplate = BaublesApi.getBaubles(mc.player).getStackInSlot(5);
+				}
 				if (chestplate.getItem() instanceof IHUDInfoProvider) {
 					IHUDInfoProvider provider = (IHUDInfoProvider) chestplate.getItem();
 					List<String> info = new ArrayList<>();

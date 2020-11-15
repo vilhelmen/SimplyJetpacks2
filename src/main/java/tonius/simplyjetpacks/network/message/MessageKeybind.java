@@ -1,5 +1,6 @@
 package tonius.simplyjetpacks.network.message;
 
+import baubles.api.BaublesApi;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,6 +47,10 @@ public class MessageKeybind implements IMessage, IMessageHandler<MessageKeybind,
 	public void handleMessage(MessageKeybind msg, MessageContext ctx) {
 		EntityPlayer player = NetworkHandler.getPlayer(ctx);
 		ItemStack stack = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
+
+		if (!(stack.getItem() instanceof ItemJetpack)) {
+            stack = BaublesApi.getBaubles(player).getStackInSlot(5);
+        }
 
 		if (stack.getItem() instanceof ItemJetpack) {
 			ItemJetpack jetpack = (ItemJetpack) stack.getItem();

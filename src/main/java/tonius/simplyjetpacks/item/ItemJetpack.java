@@ -1,5 +1,7 @@
 package tonius.simplyjetpacks.item;
 
+import baubles.api.BaubleType;
+import baubles.api.IBauble;
 import cofh.core.init.CoreProps;
 import cofh.core.item.IEnchantableItem;
 import com.google.common.collect.Multimap;
@@ -48,8 +50,6 @@ import tonius.simplyjetpacks.setup.ModEnchantments;
 import tonius.simplyjetpacks.setup.ModItems;
 import tonius.simplyjetpacks.setup.ParticleType;
 import tonius.simplyjetpacks.util.*;
-import baubles.api.BaubleType;
-import baubles.api.IBauble;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -60,6 +60,7 @@ import static tonius.simplyjetpacks.handler.LivingTickHandler.floatingTickCount;
 
 @Optional.Interface(iface = "thundr.redstonerepository.api.IArmorEnderium", modid = "redstonerepository")
 @Optional.Interface(iface = "cofh.core.item.IEnchantableItem", modid = "cofhcore")
+//@Optional.Interface(iface = "baubles.api.IBauble", modid="baubles")
 public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyContainerItem, IHUDInfoProvider, IArmorEnderium, IEnchantableItem, IBauble {
 
 	public static final String TAG_ENERGY = "Energy";
@@ -132,20 +133,22 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 	}
 
 	@Override
-	public void onArmorTick(World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
+	public void onArmorTick(@Nonnull World world, @Nonnull EntityPlayer player, @Nonnull ItemStack stack) {
 		flyUser(player, stack, this, false);
 		if (this.canCharge(stack) && this.isChargerOn(stack)) {
 			chargeInventory(player, stack, this);
 		}
 	}
 
+	//@Optional.Method(modid = "baubles")
 	@Override
 	public void onWornTick(@Nonnull ItemStack itemstack, @Nonnull EntityLivingBase player) {
-		// EntityLivingBase is probably a superclass of EntityPlayer...
-		// Inheritance doesn't work that way, uhhhhhhhhhhhh cast it?
-		// UHHHHH it wants a non-null world... but doens't use it?
-		// well I *could* just remove the nonnull on it
-		this.onArmorTick(null, (EntityPlayer)player, itemstack);
+		// Oher projects make it looks like it *is* an EntityPlayer object maybe?
+		// Well, it doesn't USE the world object, soo... let're remove the null check from it
+		// Ok, now it "works" but there's no sounds, text, or particles.
+		// Also I broke the energy% one the creative one somehow, the % keeps climbing instead of fixed at 100%
+		// the equipment slot is probably hardcoded somewhere
+		this.onArmorTick(player.world, (EntityPlayer)player, itemstack);
 	}
 
 	public void toggleState(boolean on, ItemStack stack, String type, String tag, EntityPlayer player, boolean showState) {
@@ -426,6 +429,7 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 			multimap.clear();
 			return multimap;
 		}
+		// ??
 		if (slot == EntityEquipmentSlot.CHEST) {
 			multimap.clear();
 			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIER, "Armor Modifier", Jetpack.values()[i].getArmorReduction(), 0));
@@ -551,6 +555,7 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 
 	protected void chargeInventory(EntityLivingBase user, ItemStack stack, ItemJetpack item) {
 		int i = MathHelper.clamp(stack.getItemDamage(), 0, numItems - 1);
+		// tweak for equiped bauble charging (?)
 		for (int j = 0; j <= 5; j++) {
 			ItemStack currentStack = user.getItemStackFromSlot(EquipmentSlotHelper.fromSlot(j));
 			if (currentStack != stack && getIEnergyStorage(currentStack) != null && (currentStack.hasCapability(CapabilityEnergy.ENERGY, null) || currentStack.getItem() instanceof IEnergyContainerItem && (!ModItems.integrateRR || !(stack.getItem() instanceof IArmorEnderium)))) {
@@ -595,17 +600,14 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 		return enchantment == Enchantment.getEnchantmentByLocation("cofhcore:holding");
 	}
 
-	// @Optional.Method(modid = "baubles")
-	// I can *almost* see how to make this optional, but I am too bad at java now
-	// would need an entry in integration.ModType... probably
-	// ...do I just return 5 and skip the custom types????????
-	// Still need inheritance :/
+	//@Optional.Method(modid = "baubles")
 	@Override
 	public BaubleType getBaubleType(ItemStack itemstack) {
 		return BaubleType.BODY;
 	}
 
 	// only able to equip non-armored variants
+	//@Optional.Method(modid = "baubles")
 	@Override
 	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {	
 		int i = MathHelper.clamp(itemstack.getItemDamage(), 0, numItems - 1);	

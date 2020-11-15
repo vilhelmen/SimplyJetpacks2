@@ -1,5 +1,6 @@
 package tonius.simplyjetpacks.client.handler;
 
+import baubles.api.BaublesApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,6 +63,11 @@ public class KeybindHandler {
 		EntityPlayer player = FMLClientHandler.instance().getClient().player;
 		ItemStack chestStack = player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		Item chestItem = StackUtil.getItem(chestStack);
+
+		if (!(chestItem instanceof ItemJetpack)) {
+			chestStack = BaublesApi.getBaubles(player).getStackInSlot(5);
+			chestItem = StackUtil.getItem(chestStack);
+		}
 
 		if (chestItem instanceof ItemJetpack) {
 			if (JETPACK_GUI_KEY.isPressed()) {
