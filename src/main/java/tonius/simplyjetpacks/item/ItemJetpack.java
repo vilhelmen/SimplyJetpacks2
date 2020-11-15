@@ -142,9 +142,10 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 	@Override
 	public void onWornTick(@Nonnull ItemStack itemstack, @Nonnull EntityLivingBase player) {
 		// EntityLivingBase is probably a superclass of EntityPlayer...
+		// Inheritance doesn't work that way, uhhhhhhhhhhhh cast it?
 		// UHHHHH it wants a non-null world... but doens't use it?
 		// well I *could* just remove the nonnull on it
-		this.onArmorTick(null, player, stack);
+		this.onArmorTick(null, (EntityPlayer)player, itemstack);
 	}
 
 	public void toggleState(boolean on, ItemStack stack, String type, String tag, EntityPlayer player, boolean showState) {
@@ -606,7 +607,8 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 
 	// only able to equip non-armored variants
 	@Override
-	public default boolean canEquip(ItemStack itemstack, EntityLivingBase player) {		
+	public boolean canEquip(ItemStack itemstack, EntityLivingBase player) {	
+		int i = MathHelper.clamp(itemstack.getItemDamage(), 0, numItems - 1);	
 		return !Jetpack.values()[i].getIsArmored();
 	}
 }
