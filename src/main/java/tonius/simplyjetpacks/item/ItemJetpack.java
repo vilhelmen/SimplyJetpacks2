@@ -2,6 +2,7 @@ package tonius.simplyjetpacks.item;
 
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import baubles.api.BaublesApi;
 import cofh.core.init.CoreProps;
 import cofh.core.item.IEnchantableItem;
 import com.google.common.collect.Multimap;
@@ -143,15 +144,15 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 	//@Optional.Method(modid = "baubles")
 	@Override
 	public void onWornTick(@Nonnull ItemStack itemstack, @Nonnull EntityLivingBase player) {
-		// Oher projects make it looks like it *is* an EntityPlayer object maybe?
-		// Well, it doesn't USE the world object, soo... let're remove the null check from it
-		// Ok, now it "works" but there's no sounds, text, or particles.
-		// Also I broke the energy% one the creative one somehow, the % keeps climbing instead of fixed at 100%
-		// the equipment slot is probably hardcoded somewhere
+		// ok, new issue. hover/etc states do not update until the item is rendered in the inventory.
+		// What? It handles the messages (messagekeybind.java) on press, but it just doens't do anything?
+		// I18n.format fails now with the gui screen? how did we break that? It's a string???
+		// !!! SERVER says NO HOVER, CLIENT says HOVER
 		this.onArmorTick(player.world, (EntityPlayer)player, itemstack);
 	}
 
 	public void toggleState(boolean on, ItemStack stack, String type, String tag, EntityPlayer player, boolean showState) {
+		//System.out.println("TOGGLE A STATE");
 		NBTHelper.setBoolean(stack, tag, !on);
 		if (player != null && showState) {
 			ITextComponent state = on ? SJStringUtil.localizeNew("chat.", ".disabled") : SJStringUtil.localizeNew("chat.", ".enabled");
@@ -429,7 +430,6 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 			multimap.clear();
 			return multimap;
 		}
-		// ??
 		if (slot == EntityEquipmentSlot.CHEST) {
 			multimap.clear();
 			multimap.put(SharedMonsterAttributes.ARMOR.getName(), new AttributeModifier(ARMOR_MODIFIER, "Armor Modifier", Jetpack.values()[i].getArmorReduction(), 0));
@@ -555,9 +555,14 @@ public class ItemJetpack extends ItemArmor implements ISpecialArmor, IEnergyCont
 
 	protected void chargeInventory(EntityLivingBase user, ItemStack stack, ItemJetpack item) {
 		int i = MathHelper.clamp(stack.getItemDamage(), 0, numItems - 1);
-		// tweak for equiped bauble charging (?)
-		for (int j = 0; j <= 5; j++) {
-			ItemStack currentStack = user.getItemStackFromSlot(EquipmentSlotHelper.fromSlot(j));
+		ItemStack currentStack = null;
+		for (int j = 0; j <= 6; j++) {
+			if (j != 6) {
+				currentStack = user.getItemStackFromSlot(EquipmentSlotHelper.fromSlot(j));
+			}
+			else {
+				currentStack = BaublesApi.getBaubles((EntityPlayer) user).getStackInSlot(5);
+			}
 			if (currentStack != stack && getIEnergyStorage(currentStack) != null && (currentStack.hasCapability(CapabilityEnergy.ENERGY, null) || currentStack.getItem() instanceof IEnergyContainerItem && (!ModItems.integrateRR || !(stack.getItem() instanceof IArmorEnderium)))) {
 				if (Jetpack.values()[i].usesEnergy) {
 					int energyToAdd = Math.min(item.useEnergy(stack, Jetpack.values()[i].getEnergyPerTickOut(), true), getIEnergyStorage(currentStack).receiveEnergy(Jetpack.values()[i].getEnergyPerTickOut(), true));

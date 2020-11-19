@@ -65,6 +65,7 @@ public class KeybindHandler {
 		Item chestItem = StackUtil.getItem(chestStack);
 
 		if (!(chestItem instanceof ItemJetpack)) {
+			// NO SYNC
 			chestStack = BaublesApi.getBaubles(player).getStackInSlot(5);
 			chestItem = StackUtil.getItem(chestStack);
 		}

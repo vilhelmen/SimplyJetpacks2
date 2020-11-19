@@ -48,6 +48,7 @@ public class ClientTickHandler {
 		ParticleType jetpackState = null;
 		ItemStack armor = mc.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
 		if (!(armor.getItem() instanceof ItemJetpack)) {
+			// NO SYNC
             armor = BaublesApi.getBaubles(mc.player).getStackInSlot(5);
         }
 		if (armor.getItem() instanceof ItemJetpack) {

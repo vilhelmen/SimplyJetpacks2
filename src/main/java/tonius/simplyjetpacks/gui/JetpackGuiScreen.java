@@ -53,6 +53,7 @@ public class JetpackGuiScreen extends GuiScreen {
         ItemStack stack = minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST);
         Item item = stack.getItem();
         if (!(item instanceof ItemJetpack)) {
+            // NO SYNC
             stack = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5);
             item = stack.getItem();
         }
@@ -85,6 +86,7 @@ public class JetpackGuiScreen extends GuiScreen {
         this.drawTexturedModalRect(relX, relY, 0, 0, WIDTH, HEIGHT);
 
         Item chest = minecraft.player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem();
+        // NO SYNC
         if (!(chest instanceof ItemJetpack)) {
             chest = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5).getItem();
         }
@@ -105,6 +107,7 @@ public class JetpackGuiScreen extends GuiScreen {
         Item item = stack.getItem();
 
         if (!(item instanceof ItemJetpack)) {
+            // NO SYNC
             stack = BaublesApi.getBaubles(minecraft.player).getStackInSlot(5);
             item = stack.getItem();
         }
